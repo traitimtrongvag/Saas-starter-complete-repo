@@ -27,11 +27,6 @@
 
 ---
 
-## 🗂 Project Structure
-
-root ├── backend │   ├── src │   ├── package.json │   └── tsconfig.json ├── frontend │   ├── src │   ├── package.json │   └── tsconfig.json ├── prisma │   └── schema.prisma ├── docker-compose.yml ├── Dockerfile.backend ├── Dockerfile.frontend ├── .gitignore ├── LICENSE └── README.md
-
----
 
 ## ⚡️ Quickstart
 
@@ -60,21 +55,6 @@ docker-compose up --build
 Frontend: http://localhost:3000
 
 API: http://localhost:4000
-
-
-
----
-
-🎨 Design & Vibe
-
-🎵 Youthful & minimal: Tailwind CSS + clean components.
-
-⚡ Developer-friendly: Clear folder structure, minimal boilerplate.
-
-🌍 Cloud-ready: Dockerized services, GitHub Actions for CI/CD.
-
-
-
 ---
 
 🛠 Tech Stack
