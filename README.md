@@ -39,12 +39,12 @@ root ├── backend │   ├── src │   ├── package.json │   �
 ```bash
 git clone https://github.com/traitimtrongvag/Saas-starter-complete-repo.git
 cd Saas-starter-complete-repo
-
+```
 2. Install dependencies
-
+```bash
 cd backend && npm install
 cd ../frontend && npm install
-
+```
 3. Set up environment variables
 
 Create .env files for backend and frontend.
@@ -140,5 +140,5 @@ See LICENSE for details.
 </p><p align="center">
   Crafted with ❤️ for developers who love to build fast & scale smart.
 </p>
-```
+
 ---
