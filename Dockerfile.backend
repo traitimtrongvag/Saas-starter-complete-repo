@@ -1,1 +1,16 @@
 
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY backend/package.json backend/package-lock.json* ./
+RUN npm ci --silent
+COPY backend/ ./
+RUN npm run build
+
+FROM node:20-alpine
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /app/backend/package.json ./
+COPY --from=builder /app/backend/dist ./dist
+RUN npm ci --omit=dev --silent
+EXPOSE 4000
+CMD ["node", "dist/index.js"]
