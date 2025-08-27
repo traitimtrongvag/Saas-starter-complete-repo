@@ -53,8 +53,8 @@ JWT_SECRET="your_jwt_secret"
 docker-compose up --build
 
 Frontend: http://localhost:3000
-
 API: http://localhost:4000
+
 ---
 
 🛠 Tech Stack
