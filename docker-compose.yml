@@ -1,15 +1,28 @@
-
 version: '3.8'
 services:
   db:
-    image: postgres:15
+    image: postgres:16-alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: saas
+      POSTGRES_INITDB_ARGS: "-E UTF8"
     volumes:
       - db-data:/var/lib/postgresql/data
     ports: ['5432:5432']
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2048M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
@@ -19,10 +32,22 @@ services:
       DATABASE_URL: postgres://postgres:postgres@db:5432/saas
       PORT: 4000
       JWT_SECRET: changeme
-    depends_on: ['db']
+      NODE_ENV: production
+    depends_on:
+      db:
+        condition: service_healthy
     ports: ['4000:4000']
     volumes:
       - ./backend:/app/backend
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1024M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    restart: unless-stopped
 
   frontend:
     build:
@@ -30,6 +55,15 @@ services:
       dockerfile: Dockerfile.frontend
     depends_on: ['backend']
     ports: ['3000:80']
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    restart: unless-stopped
 
 volumes:
   db-data:
