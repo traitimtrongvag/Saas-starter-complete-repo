@@ -3,21 +3,26 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
 
+export interface AuthenticatedRequest extends Request {
+  userId?: string;
+}
+
 export function requireAuth(
-  req: Request & { userId?: string },
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
-) {
+): void {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return res.status(401).json({ error: 'no token' });
+    res.status(401).json({ error: 'no token' });
+    return;
   }
 
   const token = authHeader.replace(/^Bearer\s+/, '');
 
   try {
-    const payload: any = jwt.verify(token, JWT_SECRET);
+    const payload = jwt.verify(token, JWT_SECRET) as { sub: string };
     req.userId = payload.sub;
     next();
   } catch (error) {
