@@ -1,11 +1,11 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import prisma from '../services/prismaClient';
-import { requireAuth } from '../middleware/auth';
+import { requireAuth, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
 const MAX_TODOS_PER_REQUEST = 100;
 
-router.get('/', requireAuth, async (req: any, res) => {
+router.get('/', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   const todos = await prisma.todo.findMany({
     where: { ownerId: req.userId },
     take: MAX_TODOS_PER_REQUEST
@@ -14,7 +14,7 @@ router.get('/', requireAuth, async (req: any, res) => {
   res.json(todos);
 });
 
-router.post('/', requireAuth, async (req: any, res) => {
+router.post('/', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   const { title, body } = req.body;
 
   if (!title) {
@@ -28,7 +28,7 @@ router.post('/', requireAuth, async (req: any, res) => {
   res.status(201).json(todo);
 });
 
-router.patch('/:id/toggle', requireAuth, async (req: any, res) => {
+router.patch('/:id/toggle', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
   const { id } = req.params;
   const todo = await prisma.todo.findUnique({ where: { id } });
 
