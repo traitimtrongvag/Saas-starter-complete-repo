@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import prisma from '../services/prismaClient';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -8,7 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'changeme';
 const TOKEN_EXPIRY = '7d';
 const SALT_ROUNDS = 10;
 
-router.post('/register', async (req, res) => {
+router.post('/register', async (req: Request, res: Response) => {
   const { email, password, name } = req.body;
 
   if (!email || !password) {
@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
   res.status(201).json({ token });
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
