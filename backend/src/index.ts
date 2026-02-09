@@ -1,4 +1,8 @@
-import 'dotenv/config'
-import app from './app'
-const port = Number(process.env.PORT || 4000)
-app.listen(port, ()=> console.log(`Backend listening on ${port}`))
+import 'dotenv/config';
+import app from './app';
+
+const PORT = Number(process.env.PORT || 4000);
+
+app.listen(PORT, () => {
+  console.log(`Backend listening on ${PORT}`);
+});
