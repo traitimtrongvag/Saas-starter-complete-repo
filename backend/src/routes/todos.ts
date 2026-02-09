@@ -6,6 +6,10 @@ const router = Router();
 const MAX_TODOS_PER_REQUEST = 100;
 
 router.get('/', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+  if (!req.userId) {
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+
   const todos = await prisma.todo.findMany({
     where: { ownerId: req.userId },
     take: MAX_TODOS_PER_REQUEST
@@ -21,6 +25,10 @@ router.post('/', requireAuth, async (req: AuthenticatedRequest, res: Response) =
     return res.status(400).json({ error: 'title required' });
   }
 
+  if (!req.userId) {
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+
   const todo = await prisma.todo.create({
     data: { title, body, ownerId: req.userId }
   });
@@ -29,7 +37,12 @@ router.post('/', requireAuth, async (req: AuthenticatedRequest, res: Response) =
 });
 
 router.patch('/:id/toggle', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
-  const { id } = req.params;
+  const id = typeof req.params.id === 'string' ? req.params.id : req.params.id[0];
+
+  if (!req.userId) {
+    return res.status(401).json({ error: 'unauthorized' });
+  }
+
   const todo = await prisma.todo.findUnique({ where: { id } });
 
   if (!todo || todo.ownerId !== req.userId) {
